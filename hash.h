@@ -5,6 +5,11 @@
 #include <cmath>
 #include <random>
 #include <chrono>
+#include <vector>
+#include <string>
+#include <ctime>
+#include <cstdlib>
+
 
 typedef std::size_t HASH_INDEX_T;
 
@@ -21,14 +26,63 @@ struct MyStringHash {
     {
         // Add your code here
 
+    unsigned long long w[5];
+    std::vector<unsigned long long> vecInts;
+    unsigned long long base; 
+    base = (unsigned long long ) 36;
+
+    std::string b = k;
+    int place = 4;
+
+    while(b.size() > 6){
+
+        for(int i = 6; i >= 1; i--){
+                char temp = b[b.size()-i];
+               vecInts.push_back((unsigned long long) letterDigitToNumber(temp));
+              }
+
+                w[place] = (((((vecInts[0]*base) + vecInts[1])*base + vecInts[2])*base + vecInts[3])*base + vecInts[4])*base + vecInts[5];
+                vecInts.clear();
+                b = b.substr(0, b.size()-6);
+                place--;
+        }
+
+
+        for(int i = 6; i > b.size(); i-- ){
+            vecInts.push_back(0);
+        }
+
+        for(int i = 0; i < b.size(); i++){
+            vecInts.push_back((unsigned long long) letterDigitToNumber(b[i]));
+        }
+
+    w[place] = (((((vecInts[0]*base) + vecInts[1])*base + vecInts[2])*base + vecInts[3])*base + vecInts[4])*base + vecInts[5];
+        place--;
+
+    for(int i  = place; i >= 0; i-- ){
+        w[i] = (unsigned long long) 0;
+    }
+
+
+    return (rValues[0]*w[0] +rValues[1]*w[1] + rValues[2]*w[2] + rValues[3]*w[3] + rValues[4]*w[4] );
 
     }
 
     // A likely helper function is to convert a-z,0-9 to an integral value 0-35
     HASH_INDEX_T letterDigitToNumber(char letter) const
     {
-        // Add code here or delete this helper function if you do not want it
-
+      for(char i = '0'; i <= '9'; i++){
+        if(letter == i){
+          return (int) letter - 22;
+          break;
+        }
+      }
+        if(letter < 91){
+          return (int) (letter - 65);
+        }
+        else{
+        return (int) (letter - 97);
+        }
     }
 
     // Code to generate the random R values
@@ -44,6 +98,7 @@ struct MyStringHash {
             rValues[i] = generator();
         }
     }
+
 };
 
 #endif
