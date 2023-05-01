@@ -488,14 +488,16 @@ void HashTable<K,V,Prober,Hash,KEqual>::resize()
         HashItem* current = oldTable[i];
         if(current != nullptr){
             if(current->deleted){
-                delete current;
+                delete oldTable[i];
                 this->deleted--;
             }
             else{
             insert(current->item);
+            delete oldTable[i];
             }
         }
     }
+    //oldTable.clear();
     //std::cout<< "DELETED = " << this->deleted << std::endl;
 }
 
